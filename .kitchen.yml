@@ -1,19 +1,30 @@
 ---
-driver:
-  name: vagrant
+driver_plugin: docker
 
-provisioner:
-  name: chef_solo
+platforms:
+- name: ubuntu
+
+
 
 platforms:
   - name: ubuntu-12.04
     driver_config:
-      network:
-      - ["forwarded_port", {guest: 80, host: 8080, guest: 443, host: 8443}]
+      run_list:
+      - recipe[apt]
+      forward:
+        - 22:2222
+        - 80:8080
+        - 443:8443
   - name: centos-6.4
     driver_config:
-        network:
-        - ["forwarded_port", {guest: 80, host: 8081, guest: 443, host: 8444}]
+      image: centos
+      platform: rhel
+      run_list:
+      - recipe[yum]
+      forward:
+        - 22:2222
+        - 80:8081
+        - 443:8444
 
 suites:
   - name: default
